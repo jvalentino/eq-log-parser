@@ -1,9 +1,15 @@
 package com.github.jvalentino.eq;
 
 import com.github.jvalentino.eq.service.LogParsingProcessor;
+
+import java.awt.*;
 import java.io.File;
+import java.util.TimerTask;
+
 import org.apache.commons.io.input.Tailer;
 import org.apache.commons.io.input.TailerListenerAdapter;
+
+import javax.swing.*;
 
 /**
  * Main application runtime.
@@ -23,10 +29,27 @@ public class MainApplication extends TailerListenerAdapter {
    * Main method
    */
   public void execute() {
-    File logFile = new File("demo-data/demo-file.txt");
+    /*File logFile = new File("demo-data/demo-file.txt");
 
     LogParsingProcessor processor = new LogParsingProcessor(logFile);
-    processor.start(true);
+    processor.start(true);*/
+
+    SwingUtilities.invokeLater(() -> {
+      JFrame frame = new JFrame("Forced Always on Top");
+      frame.setSize(300, 200);
+      frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+      frame.setAlwaysOnTop(true);
+      frame.setVisible(true);
+
+      // Use Swing Timer instead of java.util.Timer
+      Timer timer = new Timer(1000, e -> {
+        frame.toFront();
+        frame.repaint();
+      });
+
+      timer.setRepeats(true);
+      timer.start();
+    });
 
   }
 
