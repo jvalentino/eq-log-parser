@@ -11,6 +11,11 @@ plugins {
 
     // Apply the application plugin to add support for building a CLI application in Java.
     id 'application'
+
+    // JACACO!
+    id 'jacoco'
+    // PMD!
+    id 'pmd'
 }
 
 repositories {
@@ -41,10 +46,42 @@ java {
 
 application {
     // Define the main class for the application.
-    mainClass = 'org.example.App'
+    mainClass = 'com.github.jvalentino.eq.MainApplication'
 }
 
 tasks.named('test') {
     // Use JUnit Platform for unit tests.
     useJUnitPlatform()
 }
+
+// JACACO!
+test {
+    finalizedBy jacocoTestReport // report is always generated after tests run
+}
+jacocoTestReport {
+    dependsOn test // tests are required to run before generating the report
+}
+
+jacocoTestCoverageVerification {
+    dependsOn jacocoTestReport
+    violationRules {
+        rule {
+            limit {
+                minimum = 0.1
+            }
+        }
+    }
+}
+
+check {
+    dependsOn jacocoTestCoverageVerification
+}
+
+// PMD!
+pmd {
+    ruleSetFiles = files("${rootDir}/config/pmd-java.xml")
+    ruleSets = [] // Disable built-in rulesets
+    maxFailures = 4
+}
+
+

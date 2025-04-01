@@ -3,12 +3,16 @@
  */
 package org.example;
 
+/**
+ * Auto generated
+ */
+@SuppressWarnings({"ShortClassName"})
 public class App {
+    /**
+     * Test method
+     * @return nothing
+     */
     public String getGreeting() {
         return "Hello World!";
-    }
-
-    public static void main(String[] args) {
-        System.out.println(new App().getGreeting());
     }
 }
