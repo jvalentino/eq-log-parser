@@ -1,6 +1,7 @@
 package com.github.jvalentino.eq.main;
 
 
+import com.github.jvalentino.eq.component.DpsPanel;
 import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -18,6 +19,7 @@ public class MainWindow extends JFrame {
   private MainWindowController controller = null;
   protected JPanel mainPanel;
   protected JButton loadButton;
+  protected DpsPanel dpsPanel;
 
   public MainWindow() {
     controller = new MainWindowController(this);
@@ -49,19 +51,10 @@ public class MainWindow extends JFrame {
    * Replaces the window content with a new JPanel.
    */
   protected void loadButtonPressed() {
-    JPanel newPanel = new JPanel(new GridBagLayout());
-    newPanel.setBackground(Color.LIGHT_GRAY);
-
-    JLabel label = new JLabel("New Panel Loaded!", SwingConstants.CENTER);
-
-    // Center the label
-    GridBagConstraints gbc = new GridBagConstraints();
-    gbc.gridx = 0;
-    gbc.gridy = 0;
-    newPanel.add(label, gbc);
+    dpsPanel = new DpsPanel();
 
     // Replace content
-    this.setContentPane(newPanel);
+    this.setContentPane(dpsPanel);
     this.revalidate(); // Refresh layout
     this.repaint();    // Redraw window
   }

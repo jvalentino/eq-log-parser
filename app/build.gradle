@@ -26,6 +26,8 @@ repositories {
 dependencies {
     // https://mvnrepository.com/artifact/commons-io/commons-io
     implementation 'commons-io:commons-io:2.18.0'
+    implementation 'org.jfree:jfreechart:1.5.3'
+    implementation 'org.jfree:jcommon:1.0.24'
 
     // Use the latest Groovy version for Spock testing
     testImplementation libs.groovy
