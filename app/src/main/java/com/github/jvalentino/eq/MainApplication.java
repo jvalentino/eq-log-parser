@@ -1,5 +1,6 @@
 package com.github.jvalentino.eq;
 
+import com.github.jvalentino.eq.main.MainWindow;
 import com.github.jvalentino.eq.service.LogParsingProcessor;
 
 import java.awt.*;
@@ -16,6 +17,8 @@ import javax.swing.*;
  */
 @SuppressWarnings({"PMD.AtLeastOneConstructor"})
 public class MainApplication extends TailerListenerAdapter {
+
+  private MainWindow window = null;
 
   /**
    * Entry point
@@ -35,20 +38,8 @@ public class MainApplication extends TailerListenerAdapter {
     processor.start(true);*/
 
     SwingUtilities.invokeLater(() -> {
-      JFrame frame = new JFrame("Forced Always on Top");
-      frame.setSize(300, 200);
-      frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-      frame.setAlwaysOnTop(true);
-      frame.setVisible(true);
-
-      // Use Swing Timer instead of java.util.Timer
-      Timer timer = new Timer(1000, e -> {
-        frame.toFront();
-        frame.repaint();
-      });
-
-      timer.setRepeats(true);
-      timer.start();
+      window = new MainWindow();
+      window.display();
     });
 
   }
