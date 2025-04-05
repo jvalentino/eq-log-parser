@@ -17,18 +17,23 @@ public class ActionParser {
       "\\[(.*?)\\] (\\w+) (\\w+) (.+?) for (\\d+) points of damage\\."
   );
 
+  private static final Pattern NON_MELEE_PATTERN = Pattern.compile(
+      "\\[(.*?)\\] (\\w+) (\\w+) (.+?) for (\\d+) points of (\\w+-?\\w*) damage\\. \\((.+?)\\)"
+  );
+
   private static final DateFormat
       dateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss yyyy", Locale.ENGLISH);
 
   public static LogEvent parse(String line) {
     String trimmed = line.trim();
 
-    if (!trimmed.contains("points of damage")) {
-      return new LogEvent();
-    } else {
+    if (trimmed.contains("points of damage")) {
       return parseMeleeDamage(trimmed);
+    } else if (trimmed.contains("points of non-melee damage")) {
+      return parseNonMeleeDamage(trimmed);
     }
 
+    return new LogEvent();
 
   }
 
@@ -66,6 +71,42 @@ public class ActionParser {
     event.setRecipient(target);
     event.setDamage(damage);
     event.setActionSubType(action);
+
+    return event;
+  }
+
+  public static LogEvent parseNonMeleeDamage(String line){
+    LogEvent event = new LogEvent();
+    Matcher matcher = NON_MELEE_PATTERN.matcher(line);
+    if (!matcher.matches()) {
+      return event;
+    }
+
+    String timestampStr = matcher.group(1);         // "Sun Mar 30 18:54:38 2025"
+    String actor = matcher.group(2);                // "Trombonius"
+    String action = matcher.group(3);               // "hit"
+    String target = matcher.group(4);               // "Qua Senshali Xakra"
+    int damage = Integer.parseInt(matcher.group(5));// 4087
+    String damageType = matcher.group(6);           // "non-melee"
+    String spell = matcher.group(7);                // "Time Snap"
+
+    Date timestamp = null;
+
+    try {
+      timestamp = dateFormat.parse(timestampStr);
+    } catch (ParseException e) {
+      e.printStackTrace();
+      System.err.println(line);
+      return event;
+    }
+
+    event.setTimestamp(timestamp);
+    event.setTimestampString(timestampStr);
+    event.setActor(actor);
+    event.setActionType(ActionType.SPELL);
+    event.setRecipient(target);
+    event.setDamage(damage);
+    event.setActionSubType(spell);
 
     return event;
   }
